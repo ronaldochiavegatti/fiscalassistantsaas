@@ -12,6 +12,30 @@ Este repositório documenta uma arquitetura mínima em microserviços para um MV
 - **billing-service**: controla assinatura (Free/Pro/Enterprise), contagem de tokens e limites de upload. Integração futura com gateway de pagamento pode ficar stub no MVP.
 - **reflex-frontend**: páginas de Landing, Dashboard, Documents, AI Assistant, Billing/Settings e Admin. Comunica-se apenas com o api-gateway.
 
+## Executando o MVP da Fase 1
+
+### auth-service
+
+```bash
+cd auth-service
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8001
+```
+
+### api-gateway
+
+```bash
+cd api-gateway
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+JWT_SECRET=super-secret-key uvicorn main:app --reload --port 8000
+```
+
+### reflex-frontend
+
+Abra `reflex-frontend/index.html` no navegador para ver a landing page com cards do dashboard mockados. A chamada “Começar agora” leva diretamente ao painel.
+
 ## Infraestrutura Compartilhada
 
 - **Postgres**: schemas separados por serviço (se desejado).
