@@ -66,6 +66,37 @@ O endpoint `/limits/summary?year=2025&user_id=1` retorna:
 - Receita anual acumulada
 - Limite restante (81k - receita anual)
 
+### billing_service
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r billing_service/requirements.txt
+uvicorn billing_service.main:app --reload --port 8005
+```
+
+Endpoints:
+
+- `POST /billing/track-usage`: registra tokens, uploads e chamadas.
+- `GET /billing/me?user_id=1`: consulta o plano corrente (Free/Pro stub) e consumo do mês.
+
+### assistant_service (RAG)
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r assistant_service/requirements.txt
+BILLING_SERVICE_URL=http://localhost:8005 uvicorn assistant_service.main:app --reload --port 8004
+```
+
+O endpoint `POST /assistant/chat` recebe `{ "user_id": 1, "message": "..." }`, consulta as transações recentes e monta um parecer textual. O serviço registra uso de tokens no billing_service automaticamente.
+
+### reflex-frontend
+
+A interface agora inclui:
+
+- Dashboard com faturamento e alertas do limits_service.
+- Widget de chat para o assistant_service.
+- Cartão de consumo do billing_service.
+
 ## Infraestrutura Compartilhada
 
 - **Postgres**: schemas separados por serviço (se desejado).
