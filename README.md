@@ -32,9 +32,39 @@ pip install -r requirements.txt
 JWT_SECRET=super-secret-key uvicorn main:app --reload --port 8000
 ```
 
+Variáveis úteis:
+- `LIMITS_SERVICE_URL`: URL do limits_service (default `http://localhost:8003`).
+
 ### reflex-frontend
 
-Abra `reflex-frontend/index.html` no navegador para ver a landing page com cards do dashboard mockados. A chamada “Começar agora” leva diretamente ao painel.
+Abra `reflex-frontend/index.html` no navegador para ver a landing page. O dashboard consulta o `limits_service` e cai em fallback local caso o endpoint não esteja rodando.
+
+### documents_service + Celery worker
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r documents_service/requirements.txt
+
+# API de upload (usa o mesmo banco sqlite ./saas.db por padrão)
+uvicorn documents_service.main:app --reload --port 8002
+
+# Worker para processar OCR / criar transações (broker Redis default)
+CELERY_BROKER_URL=redis://localhost:6379/0 celery -A documents_service.worker.celery_app worker -l info
+```
+
+### limits_service
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r limits_service/requirements.txt
+uvicorn limits_service.main:app --reload --port 8003
+```
+
+O endpoint `/limits/summary?year=2025&user_id=1` retorna:
+
+- Receita do mês atual
+- Receita anual acumulada
+- Limite restante (81k - receita anual)
 
 ## Infraestrutura Compartilhada
 

@@ -1,11 +1,14 @@
+import datetime
 import os
 from typing import Callable
 
+import httpx
 import jwt
 from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 
 JWT_SECRET = os.getenv("JWT_SECRET", "super-secret-key")
+LIMITS_SERVICE_URL = os.getenv("LIMITS_SERVICE_URL", "http://localhost:8003")
 
 app = FastAPI(title="API Gateway", version="0.1.0")
 
@@ -54,18 +57,42 @@ def dashboard(request: Request):
     if not user_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
 
-    # Fake data for now; the UI consumes this payload.
-    return {
+    fallback = {
         "user_id": user_id,
-        "revenue_month": 12500.0,
-        "revenue_year": 74200.0,
-        "tax_due": 1850.0,
-        "documents_pending": 3,
-        "alerts": [
-            "Envie as notas fiscais do último trimestre.",
-            "Valide o faturamento do mês passado para evitar multas.",
-        ],
+        "revenue_month": 0.0,
+        "revenue_year": 0.0,
+        "tax_due": 0.0,
+        "documents_pending": 0,
+        "alerts": ["Envie sua primeira nota fiscal para liberar o dashboard."],
     }
+
+    try:
+        current_year = datetime.datetime.utcnow().year
+        response = httpx.get(
+            f"{LIMITS_SERVICE_URL}/limits/summary",
+            params={"year": current_year, "user_id": user_id},
+            timeout=5,
+        )
+        response.raise_for_status()
+        summary = response.json()
+
+        revenue_month = summary.get("revenue_month", 0.0)
+        revenue_year = summary.get("revenue_year", 0.0)
+        limit_remaining = summary.get("limit_remaining", 0.0)
+
+        return {
+            "user_id": user_id,
+            "revenue_month": revenue_month,
+            "revenue_year": revenue_year,
+            "tax_due": round(revenue_month * 0.08, 2),
+            "documents_pending": 0,
+            "alerts": [
+                f"Limite restante MEI: R$ {limit_remaining:,.2f}",
+                "Envie novas notas fiscais para manter a atualização em tempo real.",
+            ],
+        }
+    except httpx.HTTPError:
+        return fallback
 
 
 @app.get("/profile")
