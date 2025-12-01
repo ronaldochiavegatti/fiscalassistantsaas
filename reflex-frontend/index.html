@@ -1,49 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fiscal Assistant</title>
+    <title>Fiscal Assistant - Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="hero">
-      <div class="container">
-        <p class="badge">MVP em progresso</p>
-        <h1>Automatize suas rotinas fiscais em minutos</h1>
-        <p class="subtitle">
-          Conecte documentos, acompanhe limites do MEI e receba alertas inteligentes.
-        </p>
-        <a class="cta" href="#dashboard">Começar agora</a>
+    <header>
+      <div class="brand">
+        <span class="logo">Fiscal Assistant</span>
+        <span class="subtitle">Dashboard e IA</span>
+      </div>
+      <div class="nav-actions">
+        <span class="pill">Usuário #1</span>
       </div>
     </header>
 
-    <main class="container">
-      <section id="dashboard" class="dashboard">
-        <div class="dashboard-header">
+    <main>
+      <section class="panel">
+        <div class="panel-header">
           <div>
-            <p class="eyebrow">Dashboard</p>
-            <h2>Resumo financeiro</h2>
-            <p class="muted">Dados mockados até integrar o OCR e RAG.</p>
+            <p class="muted">Resumo financeiro</p>
+            <h2>Visão geral</h2>
           </div>
-          <button class="primary">Atualizar dados</button>
+          <button id="refresh-dashboard" class="secondary">Atualizar</button>
+        </div>
+        <div id="card-grid" class="grid"></div>
+        <div id="alerts" class="alerts"></div>
+      </section>
+
+      <section class="grid two-columns">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="muted">Assistente IA</p>
+              <h2>Converse com seus dados</h2>
+            </div>
+          </div>
+          <div id="chat-history" class="chat-history"></div>
+          <div class="chat-input">
+            <textarea id="chat-message" rows="3" placeholder="Pergunte algo sobre suas transações"></textarea>
+            <button id="chat-send">Enviar</button>
+          </div>
         </div>
 
-        <div class="cards" id="card-grid"></div>
-
-        <div class="alerts" id="alerts"></div>
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="muted">Billing &amp; limites</p>
+              <h2>Uso do plano</h2>
+            </div>
+            <button id="refresh-billing" class="secondary">Atualizar</button>
+          </div>
+          <div id="billing-status" class="billing"></div>
+        </div>
       </section>
     </main>
-
-    <footer class="footer">
-      <div class="container">
-        <p>Pronto para testar? Cadastre-se com e-mail e veja o dashboard.</p>
-        <div class="footer-actions">
-          <a class="secondary" href="#">Ver planos</a>
-          <a class="cta" href="#dashboard">Começar agora</a>
-        </div>
-      </div>
-    </footer>
 
     <script src="script.js"></script>
   </body>
