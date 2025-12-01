@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fiscal Assistant</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <p class="badge">MVP em progresso</p>
+        <h1>Automatize suas rotinas fiscais em minutos</h1>
+        <p class="subtitle">
+          Conecte documentos, acompanhe limites do MEI e receba alertas inteligentes.
+        </p>
+        <a class="cta" href="#dashboard">Começar agora</a>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="dashboard" class="dashboard">
+        <div class="dashboard-header">
+          <div>
+            <p class="eyebrow">Dashboard</p>
+            <h2>Resumo financeiro</h2>
+            <p class="muted">Dados mockados até integrar o OCR e RAG.</p>
+          </div>
+          <button class="primary">Atualizar dados</button>
+        </div>
+
+        <div class="cards" id="card-grid"></div>
+
+        <div class="alerts" id="alerts"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>Pronto para testar? Cadastre-se com e-mail e veja o dashboard.</p>
+        <div class="footer-actions">
+          <a class="secondary" href="#">Ver planos</a>
+          <a class="cta" href="#dashboard">Começar agora</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
